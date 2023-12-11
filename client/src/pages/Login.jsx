@@ -40,21 +40,15 @@ const Login = () => {
       console.log(data);
       const usernameQueryParam = `?username=${inputValue.email}`;
       if(data.status === 201){
-        console.log("buyer");
+        console.log("user");
         setTimeout(() => {
-          navigate("/buyer-home" + usernameQueryParam);
+          navigate("/user-home" + usernameQueryParam);
         }, 1000);
       }
       else if(data.status === 202){
-        console.log("seller");
+        console.log("admin");
         setTimeout(() => {
-          navigate("/seller-home" + usernameQueryParam);
-        }, 1000);
-      }
-      else if(data.status === 203){
-        console.log("manager");
-        setTimeout(() => {
-          navigate("/manager-home" + usernameQueryParam);
+          navigate("/admin-home" + usernameQueryParam);
         }, 1000);
       }
       const { success, message } = data;

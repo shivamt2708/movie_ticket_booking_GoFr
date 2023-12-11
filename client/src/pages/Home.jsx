@@ -31,14 +31,11 @@ const Home = () => {
             const usernameQueryParam = `?username=${user}`;
 
             // Redirect based on the user's role
-            if (userRole === "buyer") {
-              navigate("/buyer-home" + usernameQueryParam);
-            } else if (userRole === "seller") {
-              navigate("/seller-home" + usernameQueryParam);
-            } else if (userRole === "manager") {
-              navigate("/manager-home" + usernameQueryParam);
+            if (userRole === "user") {
+              navigate("/user-home" + usernameQueryParam);
+            } else if (userRole === "admin") {
+              navigate("/admin-home" + usernameQueryParam);
             }
-
             // Display a welcome toast
             toast(`Hello ${user}`, {
               position: "top-right",

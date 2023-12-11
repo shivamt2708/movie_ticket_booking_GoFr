@@ -10,11 +10,12 @@ const Signup = () => {
     password: "",
     username: "",
     role: "",
+    location: "",
   });
   const [formValue, setFormValue] = useState({
     warehouse: "",
   });
-  const { email, password, username, role } = inputValue;
+  const { email, password, username, role, location } = inputValue;
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -44,72 +45,6 @@ const Signup = () => {
       );
       const { success, message } = data;
       if (success) {
-        if(inputValue.role === "seller"){
-          function getLocation() {
-            navigator.geolocation.getCurrentPosition(async (position) =>{
-              const latitude = position.coords.latitude;
-              const longitude = position.coords.longitude;
-              try{
-                const res = await axios.post('http://localhost:4000/seller-location', {
-                  email: inputValue.email,
-                  location: {
-                    type: 'Point',
-                    coordinates: [latitude, longitude],
-                  }
-                });
-              }
-              catch (error) {
-                console.log(error);
-              }
-            });
-          }
-          getLocation();
-        }
-
-        else if(inputValue.role === "buyer"){
-          function getLocation() {
-            navigator.geolocation.getCurrentPosition(async (position) =>{
-              const latitude = position.coords.latitude;
-              const longitude = position.coords.longitude;
-              try{
-                const res = await axios.post('http://localhost:4000/buyer-location', {
-                  email: inputValue.email,
-                  location: {
-                    type: 'Point',
-                    coordinates: [latitude, longitude],
-                  }
-                });
-              }
-              catch (error) {
-                console.log(error);
-              }
-            });
-          }
-          getLocation();
-        }
-
-        else if(inputValue.role === "manager"){
-          function getLocation() {
-            navigator.geolocation.getCurrentPosition(async (position) =>{
-              const latitude = position.coords.latitude;
-              const longitude = position.coords.longitude;
-              try{
-                const res = await axios.post('http://localhost:4000/manager-location', {
-                  email: inputValue.email,
-                  location: {
-                    type: 'Point',
-                    coordinates: [latitude, longitude],
-                  }
-                });
-              }
-              catch (error) {
-                console.log(error);
-              }
-            });
-          }
-          getLocation();
-        }
-
         handleSuccess(message);
         setTimeout(() => {
           navigate("/");
@@ -126,6 +61,7 @@ const Signup = () => {
       password: "",
       username: "",
       role: "",
+      location: "",
     });
   };
 
@@ -171,10 +107,19 @@ const Signup = () => {
             onChange={handleOnChange}
           >
             <option></option>
-            <option value="seller">Seller</option>
-            <option value="manager">Manager</option>
-            <option value="buyer">Buyer</option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
           </select>
+        </div>
+        <div>
+          <label htmlFor="location">Location</label>
+          <input
+            type="text"
+            name="location"
+            value={location}
+            placeholder="Enter your location"
+            onChange={handleOnChange}
+          />
         </div>
         <button type="submit">Submit</button>
         <span>

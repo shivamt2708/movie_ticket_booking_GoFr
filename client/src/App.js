@@ -1,12 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import { Login, Signup } from "./pages";
-import GetProduct from "./components/GetProduct";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/get-product" element={<GetProduct />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </div>
   );
