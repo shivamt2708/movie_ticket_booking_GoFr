@@ -12,9 +12,6 @@ const Signup = () => {
     role: "",
     location: "",
   });
-  const [formValue, setFormValue] = useState({
-    warehouse: "",
-  });
   const { email, password, username, role, location } = inputValue;
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -37,14 +34,10 @@ const Signup = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/signup",
-        {
-          ...inputValue,
-        },
+        "http://localhost:4000/signup/{email}",
         { withCredentials: true }
       );
-      const { success } = data;
-      const message = "xyz";
+      const { success, message } = data;
       if (success) {
         handleSuccess(message);
         setTimeout(() => {

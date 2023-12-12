@@ -6,8 +6,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
-    "fmt"
-    "encoding/json"
 	"log"
 )
 
@@ -48,39 +46,27 @@ func connectToMongoDB() (*mongo.Database, error) {
     return database, nil
 }
 
-func handleSignup(ctx *gofr.Context) (interface{}, error) {
-    var requestBody User
-	err := json.NewDecoder(ctx.Request().Body).Decode(&requestBody)
-	if err != nil {
-		return nil, fmt.Errorf("error decoding request body: %w", err)
-	}
-
-    // Get the MongoDB database instance
-    db, err := connectToMongoDB()
-    if err != nil {
-        return nil, err
-    }
-
-    // Access the "customers" collection
-    collection := db.Collection("users")
-
-    collection.InsertOne(context.Background(), bson.M{"email": requestBody.email, "username": requestBody.username, "password": requestBody.password, "role": requestBody.role, "location": requestBody.location})
-
-    response := sign_response{
-		Success: true,
-		Message: "User created successfully",
-	}
-
-	// Return the response object as JSON
-	return response.Success, err
-}
-
 
 func main() {
     app := gofr.New()
 
     // Register your MongoDB-connected handlers
-    app.POST("/signup", handleSignup)
+    app.POST("/signup/{email}", func(ctx *gofr.Context) (interface{}, error) {
+        email:= ctx.PathParam("email")
+      
+        db, err := connectToMongoDB()
+        if err != nil {
+          return nil, err
+        }
+        
+        // Inserting a customer row in database using SQL
+        collection := db.Collection("users")
+        _, err1 := collection.InsertOne(context.Background(), bson.M{
+          "email": email,
+        })
+      
+        return _, err1
+      })
 
     // Start the server
     app.Start()
