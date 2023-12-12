@@ -6,12 +6,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+    "fmt"
+    "encoding/json"
 	"log"
 )
 
-type Customer struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+type User struct {
+	email string `json:"email"`
+    username string `json:"username"`
+    password string `json:"password"`
+    role string `json:"role"`
+    location string `json:"location"`
+}
+type sign_response struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
 func connectToMongoDB() (*mongo.Database, error) {
@@ -39,8 +48,12 @@ func connectToMongoDB() (*mongo.Database, error) {
     return database, nil
 }
 
-func handleCreateCustomer(ctx *gofr.Context) (interface{}, error) {
-    name := ctx.PathParam("name")
+func handleSignup(ctx *gofr.Context) (interface{}, error) {
+    var requestBody User
+	err := json.NewDecoder(ctx.Request().Body).Decode(&requestBody)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding request body: %w", err)
+	}
 
     // Get the MongoDB database instance
     db, err := connectToMongoDB()
@@ -49,58 +62,25 @@ func handleCreateCustomer(ctx *gofr.Context) (interface{}, error) {
     }
 
     // Access the "customers" collection
-    collection := db.Collection("customers")
+    collection := db.Collection("users")
 
-    // Insert a new customer document
-    result, err := collection.InsertOne(context.Background(), bson.M{"name": name})
-    if err != nil {
-        return nil, err
-    }
+    collection.InsertOne(context.Background(), bson.M{"email": requestBody.email, "username": requestBody.username, "password": requestBody.password, "role": requestBody.role, "location": requestBody.location})
 
-    log.Printf("Inserted customer with ID: %v", result.InsertedID)
+    response := sign_response{
+		Success: true,
+		Message: "User created successfully",
+	}
 
-    return nil, nil
+	// Return the response object as JSON
+	return response.Success, err
 }
 
-func handleGetCustomers(ctx *gofr.Context) (interface{}, error) {
-    // Get the MongoDB database instance
-    db, err := connectToMongoDB()
-    if err != nil {
-        return nil, err
-    }
-
-    // Access the "customers" collection
-    collection := db.Collection("customers")
-
-    // Find all customers
-    cur, err := collection.Find(context.Background(), bson.D{})
-    if err != nil {
-        return nil, err
-    }
-    defer cur.Close(context.Background())
-
-    var customers []Customer
-    for cur.Next(context.Background()) {
-        var customer Customer
-        if err := cur.Decode(&customer); err != nil {
-            return nil, err
-        }
-        customers = append(customers, customer)
-    }
-
-    if err := cur.Err(); err != nil {
-        return nil, err
-    }
-
-    return customers, nil
-}
 
 func main() {
     app := gofr.New()
 
     // Register your MongoDB-connected handlers
-    app.POST("/customer/{name}", handleCreateCustomer)
-    app.GET("/customer", handleGetCustomers)
+    app.POST("/signup", handleSignup)
 
     // Start the server
     app.Start()

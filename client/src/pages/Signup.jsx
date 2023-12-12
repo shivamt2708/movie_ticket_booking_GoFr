@@ -43,7 +43,8 @@ const Signup = () => {
         },
         { withCredentials: true }
       );
-      const { success, message } = data;
+      const { success } = data;
+      const message = "xyz";
       if (success) {
         handleSuccess(message);
         setTimeout(() => {
