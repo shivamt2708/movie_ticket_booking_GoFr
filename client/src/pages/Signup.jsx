@@ -34,17 +34,16 @@ const Signup = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/signup/{email}",
+        `http://localhost:8000/signup/${inputValue.email}/${inputValue.username}/${inputValue.password}/${inputValue.role}/${inputValue.location}`,
         { withCredentials: true }
       );
-      const { success, message } = data;
-      if (success) {
-        handleSuccess(message);
+      if (data.data) {
+        handleSuccess("user successfully created");
         setTimeout(() => {
           navigate("/");
         }, 1000);
       } else {
-        handleError(message);
+        handleError("user could not be created");
       }
     } catch (error) {
       console.log(error);
