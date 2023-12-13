@@ -37,6 +37,7 @@ const Signup = () => {
         `http://localhost:8000/signup/${inputValue.email}/${inputValue.username}/${inputValue.password}/${inputValue.role}/${inputValue.location}`,
         { withCredentials: true }
       );
+      console.log(data)
       if (data.data) {
         handleSuccess("user successfully created");
         setTimeout(() => {

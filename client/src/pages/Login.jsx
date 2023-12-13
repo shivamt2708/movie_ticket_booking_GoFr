@@ -30,32 +30,29 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post(
-        "http://localhost:4000/login",
-        {
-          ...inputValue,
-        },
+      const data1 = await axios.post(
+        `http://localhost:8000/login/${inputValue.email}/${inputValue.password}`,
         { withCredentials: true }
       );
+      const usernameQueryParam = `?email=${inputValue.email}`;
+      const {data} = data1
       console.log(data);
-      const usernameQueryParam = `?username=${inputValue.email}`;
-      if(data.status === 201){
+      if(data.data === "user"){
         console.log("user");
         setTimeout(() => {
           navigate("/user-home" + usernameQueryParam);
         }, 1000);
       }
-      else if(data.status === 202){
+      else if(data.data === "admin"){
         console.log("admin");
         setTimeout(() => {
           navigate("/admin-home" + usernameQueryParam);
         }, 1000);
       }
-      const { success, message } = data;
-      if (success) {
-        handleSuccess(message);
+      if (data.data != null) {
+        handleSuccess("login successful");
       } else {
-        handleError(message);
+        handleError("login unsuccessful");
       }
     } catch (error) {
       console.log(error);
