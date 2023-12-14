@@ -19,68 +19,43 @@ const MyShipments = () => {
     setUsername(usernameFromParams);
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/seller/my-shipments?sender_email=${username}`);
-            const { success, shipments } = response.data;
-
-            if (success) {
-            setShipments(shipments);
-            }
+            const response = await axios.get(
+              `http://localhost:8000/my-halls/${username}`);
+            const shipments1 = response.data.data;
+            setShipments(shipments1);
+            console.log(shipments1);
         } catch (error) {
             console.error(error);
-            toast.error("Error fetching shipments", { position: "bottom-left" });
+            toast.error("Error fetching halls", { position: "bottom-left" });
         } finally {
             setLoading(false);
         }
     };
     fetchData();
   }, [username]);
-  const handleOnChange = async (para1, para2) => {
-    try{
-      const response = await axios.put(`http://localhost:4000/seller/action?shipment_id=${para1}`);
-    }
-    catch (error) {
-      console.error(error);
-      toast.error("dispatch not working", { position: "bottom-left" });
-    }
-  };
 
   return (
     <div>
-      <h1>Your Shipments</h1>
+      <h1>Your Halls' status</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
         <table>
           <thead>
             <tr>
-              <th>Shipment ID</th>
-              <th>Sender's Email</th>
-              <th>Buyer's Email</th>
-              <th>current authority</th>
-              <th>next authority</th>
-              <th>duration</th>
-              <th>action</th>
-              <th>Product Id</th>
+              <th>Hall Name</th>
+              <th>Admin's Email</th>
+              <th>Price of one seat</th>
+              <th>Total seats left</th>
             </tr>
           </thead>
           <tbody>
             {shipments.map((shipment) => (
-              <tr key={shipment._id}>
-                <td>{shipment.shipment_id}</td>
-                <td>{shipment.sender_email}</td>
-                <td>{shipment.buyer_email}</td>
-                <td>{shipment.current_authority}</td>
-                <td>{shipment.next_authority}</td>
-                <td>{shipment.duration}</td>
-                <td>
-                    <button onClick={() => handleOnChange(shipment.shipment_id, shipment.action)}>{shipment.action}</button>
-                </td>
-                <td>
-                  <span>
-                    <Link to={`/get-product?product_id=${shipment.product_id}`}>{shipment.product_id}</Link>
-                  </span>
-                </td>
-                {/* Add more columns as needed */}
+              <tr>
+                <td>{shipment.name}</td>
+                <td>{shipment.email}</td>
+                <td>{shipment.price}</td>
+                <td>{shipment.total_seats}</td>
               </tr>
             ))}
           </tbody>
