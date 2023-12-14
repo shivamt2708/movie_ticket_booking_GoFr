@@ -19,6 +19,13 @@ type Hall struct {
 	Name     string `json:"name"`
 }
 
+type Booking struct {
+	Id int `json:"id"`
+	Email    string `json:"email"`
+	User_email string `json:"user_email"`
+	Hall_name     string `json:"hall_name"`
+}
+
 
 func main() {
 	app := gofr.New()
@@ -52,6 +59,20 @@ func main() {
 
 		return data, err
 	})
+
+	app.POST("/admin/book-ticket/{email}/{user_email}/{hall_name}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		user_email := ctx.PathParam("user_email")
+		hall_name := ctx.PathParam("hall_name")
+
+		// Inserting a customer row in the database using SQL
+		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
+			"INSERT INTO bookings (email, user_email, hall_name) VALUES (?, ?, ?)",
+			email, user_email, hall_name)
+
+		return data, err
+	})
+
 
 	app.GET("/customer", func(ctx *gofr.Context) (interface{}, error) {
 		var customers []Customer

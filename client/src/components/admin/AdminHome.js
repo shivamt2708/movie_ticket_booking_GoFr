@@ -33,6 +33,11 @@ const SellerHome = () => {
     const usernameQueryParam = `?email=${username}`;
     navigate("/my-halls" + usernameQueryParam);
   };
+  const Ship3 = () => {
+    // ... (implement the Ship functionality if needed)
+    const usernameQueryParam = `?email=${username}`;
+    navigate("/admin/book-ticket" + usernameQueryParam);
+  };
 
   return (
     <>
@@ -44,6 +49,7 @@ const SellerHome = () => {
         <button onClick={Logout}>Logout</button>
         <button onClick={Ship}>Add Movie Hall</button>
         <button onClick={Ship2}>My Halls</button>
+        <button onClick={Ship3}>Book Ticket</button>
       </div>
       <ToastContainer />
     </>

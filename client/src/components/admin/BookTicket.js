@@ -8,11 +8,10 @@ import { useCookies } from "react-cookie";
 const CreateShipment = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState({
-    sender_email: "",
-    duration: 0,
-    product_id: 0,
+    user_email: "",
+    hall_name: "",
   });
-  const { sender_email, duration, product_id } = inputValue;
+  const { user_email, hall_name } = inputValue;
   const location = useLocation();
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
@@ -20,7 +19,7 @@ const CreateShipment = () => {
   useEffect(() => {
     // Parse the query parameters to get the username
     const searchParams = new URLSearchParams(location.search);
-    const usernameFromParams = searchParams.get("username");
+    const usernameFromParams = searchParams.get("email");
     setUsername(usernameFromParams);
   }, [location.search]);
   const handleOnChange = (e) => {
@@ -43,73 +42,53 @@ const CreateShipment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post(
-        "http://localhost:4000/buyer/create-shipment",
-        {
-            buyer_email: username,
-          ...inputValue,
-        },
+      const data1 = await axios.post(
+        `http://localhost:8000/admin/book-ticket/${username}/${inputValue.user_email}/${inputValue.hall_name}`,
         { withCredentials: true }
       );
-      if(data.status === 201){
-        const usernameQueryParam = `?username=${username}`;
-        navigate("/buyer-home" + usernameQueryParam);
+      const {data} = data1
+      if(data.data != null){
+        handleSuccess("ticket booked");
+        const usernameQueryParam = `?email=${username}`;
+        navigate("/admin-home" + usernameQueryParam);
       }
-      else if(data.status === 202){
-        const { message } = data;
-        window.alert('Shipment not possible');
-        const usernameQueryParam = `?username=${username}`;
-        navigate("/buyer-home" + usernameQueryParam);
+      else if(data.data === null){
+        handleError("ticket not booked");
+        const usernameQueryParam = `?email=${username}`;
+        navigate("/admin-home" + usernameQueryParam);
       }
       console.log(data);
-      const { success, message } = data;
-      if (success) {
-        handleSuccess(message);
-      } else {
-        handleError(message);
-      }
     } catch (error) {
       console.log(error);
     }
     setInputValue({
       ...inputValue,
-      sender_email: "",
-      duration: 0,
-      product_id: 0,
+      user_email: "",
+      hall_name: "",
     });
   };
 
   return (
     <div className="form_container">
-      <h2>Create Shipment</h2>
+      <h2>Book Ticket</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="sender_email">Sender's Email</label>
+          <label htmlFor="user_email">user email</label>
           <input
-            type="email"
-            name="sender_email"
-            value={sender_email}
-            placeholder="Enter sender's email"
+            type="text"
+            name="user_email"
+            value={user_email}
+            placeholder="Enter user email"
             onChange={handleOnChange}
           />
         </div>
         <div>
-          <label htmlFor="duration">duration</label>
+          <label htmlFor="hall_name">hall name</label>
           <input
-            type="number"
-            name="duration"
-            value={duration}
-            placeholder="Enter duration in days"
-            onChange={handleOnChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="product_id">Product Id</label>
-          <input
-            type="number"
-            name="product_id"
-            value={product_id}
-            placeholder="Enter Product Id"
+            type="text"
+            name="hall_name"
+            value={hall_name}
+            placeholder="Enter hall name"
             onChange={handleOnChange}
           />
         </div>
