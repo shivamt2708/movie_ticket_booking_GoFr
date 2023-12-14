@@ -12,6 +12,7 @@ type Customer struct {
 	Location string `json:"location"`
 }
 
+
 func main() {
 	app := gofr.New()
 
@@ -27,6 +28,20 @@ func main() {
 			"INSERT INTO users (email, username, password, role, location) VALUES (?, ?, ?, ?, ?)",
 			email, username, password, role, location)
 
+
+		return data, err
+	})
+
+	app.POST("/add-movie-hall/{email}/{total_seats}/{price}/{name}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		total_seats := ctx.PathParam("total_seats")
+		price := ctx.PathParam("price")
+		name := ctx.PathParam("name")
+
+		// Inserting a customer row in the database using SQL
+		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
+			"INSERT INTO halls (email, total_seats, price, name) VALUES (?, ?, ?, ?)",
+			email, total_seats, price, name)
 
 		return data, err
 	})
@@ -55,7 +70,7 @@ func main() {
 		}
 
 		// Return the customer data
-		return nil, nil
+		return customers, nil
 	})
 
 	app.POST("/login/{email}/{password}", func(ctx *gofr.Context) (interface{}, error) {
@@ -86,7 +101,8 @@ func main() {
 	
 		return nil, nil
 	})
-	
+
+
 
 	app.Start()
 }
