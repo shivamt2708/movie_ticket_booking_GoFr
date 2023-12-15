@@ -65,6 +65,21 @@ func main() {
 		return data, err
 	})
 
+	app.POST("/add-show/{email}/{movie_name}/{hall_name}/{date}/{time}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		movie_name := ctx.PathParam("movie_name")
+		hall_name := ctx.PathParam("hall_name")
+		date := ctx.PathParam("date")
+		time := ctx.PathParam("time")
+
+		// Inserting a customer row in the database using SQL
+		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
+			"INSERT INTO shows (email, movie_name, hall_name, date, time) VALUES (?, ?, ?, ?, ?)",
+			email, movie_name, hall_name, date, time)
+
+		return data, err
+	})
+
 	app.POST("/add-movie/{movie_name}", func(ctx *gofr.Context) (interface{}, error) {
 		movie_name := ctx.PathParam("movie_name")
 

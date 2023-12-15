@@ -19,6 +19,7 @@ const CreateShipment = () => {
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
   const [shipments, setShipments] = useState([]);
+  const [halls, setHalls] = useState([]);
 
   useEffect(() => {
     // Parse the query parameters to get the username
@@ -38,7 +39,21 @@ const CreateShipment = () => {
         } 
     };
     fetchData();
-  }, [location.search]);
+
+    const fetchData1 = async () => {
+        try {
+            const response = await axios.get(
+              `http://localhost:8000/my-halls/${username}`);
+            const shipments1 = response.data.data;
+            setHalls(shipments1);
+            console.log(shipments1);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error fetching HALLS", { position: "bottom-left" });
+        } 
+    };
+    fetchData1();
+  }, [location.search, username]);
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
@@ -46,14 +61,6 @@ const CreateShipment = () => {
       [name]: value,
     });
   };
-
-  const handleDateChange = (date) => {
-    setInputValue({
-      ...inputValue,
-      date,
-    });
-  };
-
 
   const handleError = (err) =>
     toast.error(err, {
@@ -106,6 +113,7 @@ const CreateShipment = () => {
             value={movie_name}
             onChange={handleOnChange}
           >
+            <option></option>
             {shipments.map((shipment) => (
             <option key={shipment.id} value={shipment.movie_name}>
                 {shipment.movie_name}
@@ -116,13 +124,19 @@ const CreateShipment = () => {
         </div>
         <div>
           <label htmlFor="hall_name">hall name</label>
-          <input
-            type="text"
+          <select
             name="hall_name"
             value={hall_name}
-            placeholder="Enter hall name"
             onChange={handleOnChange}
-          />
+          >
+            <option></option>
+            {halls.map((shipment) => (
+            <option key={shipment.id} value={shipment.name}>
+                {shipment.name}
+            </option>
+            ))}
+          
+            </select>
         </div>
         <div>
           <label htmlFor="date">date</label>
