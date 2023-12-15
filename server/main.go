@@ -26,6 +26,11 @@ type Booking struct {
 	Hall_name     string `json:"hall_name"`
 }
 
+type Movie struct {
+	Id int `json:"id"`
+	Movie_name string `json:"movie_name"`
+}
+
 
 func main() {
 	app := gofr.New()
@@ -60,6 +65,17 @@ func main() {
 		return data, err
 	})
 
+	app.POST("/add-movie/{movie_name}", func(ctx *gofr.Context) (interface{}, error) {
+		movie_name := ctx.PathParam("movie_name")
+
+		// Inserting a customer row in the database using SQL
+		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
+			"INSERT INTO movies (movie_name) VALUES (?)",
+			movie_name)
+
+		return data, err
+	})
+
 	app.POST("/admin/book-ticket/{email}/{user_email}/{hall_name}", func(ctx *gofr.Context) (interface{}, error) {
 		email := ctx.PathParam("email")
 		user_email := ctx.PathParam("user_email")
@@ -78,7 +94,7 @@ func main() {
 		var customers []Customer
 
 		// Getting the customer data from the database using SQL
-		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM users")
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM users where role = 'user'")
 		if err != nil {
 			return nil, err
 		}
@@ -152,6 +168,9 @@ func main() {
 			} else if data.Role == "admin" {
 				fmt.Println("admin")
 				return "admin", nil
+			} else if data.Role == "super-admin" {
+				fmt.Println("super-admin")
+				return "super-admin", nil
 			}
 		}
 	

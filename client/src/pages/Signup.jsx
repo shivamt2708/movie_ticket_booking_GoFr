@@ -103,6 +103,7 @@ const Signup = () => {
             <option></option>
             <option value="user">User</option>
             <option value="admin">Admin</option>
+            <option value="super-admin">Super Admin</option>
           </select>
         </div>
         <div>

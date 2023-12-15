@@ -49,6 +49,12 @@ const Login = () => {
           navigate("/admin-home" + usernameQueryParam);
         }, 1000);
       }
+      else if(data.data === "super-admin"){
+        console.log("super-admin");
+        setTimeout(() => {
+          navigate("/super-admin-home" + usernameQueryParam);
+        }, 1000);
+      }
       if (data.data != null) {
         handleSuccess("login successful");
       } else {
