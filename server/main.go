@@ -145,6 +145,33 @@ func main() {
 		return customers, nil
 	})
 
+	app.GET("/movie", func(ctx *gofr.Context) (interface{}, error) {
+		var customers []Movie
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM movies")
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Movie
+			if err := rows.Scan(&customer.Id, &customer.Movie_name); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
 	app.POST("/login/{email}/{password}", func(ctx *gofr.Context) (interface{}, error) {
 		email := ctx.PathParam("email")
 		password := ctx.PathParam("password")

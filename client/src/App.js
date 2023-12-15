@@ -7,6 +7,7 @@ import AddMovie from "./components/super-admin/AddMovie"
 import AddMovieHall from "./components/admin/AddMovieHall"
 import MyHalls from "./components/admin/MyHalls"
 import BookTicket from "./components/admin/BookTicket"
+import AddShow from "./components/admin/AddShow"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/my-halls" element={<MyHalls />} />
         <Route path="/add-movie-hall" element={<AddMovieHall />} />
         <Route path="/add-movie" element={<AddMovie />} />
+        <Route path="/add-show" element={<AddShow />} />
         <Route path="/admin-home" element={<AdminHome />} />
         <Route path="/super-admin-home" element={<SuperAdminHome />} />
         <Route path="/" element={<Home />} />
