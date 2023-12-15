@@ -46,7 +46,7 @@ const MyShipments = () => {
               <th>Hall Name</th>
               <th>Admin's Email</th>
               <th>Price of one seat</th>
-              <th>Total seats left</th>
+              <th>Total seats</th>
             </tr>
           </thead>
           <tbody>

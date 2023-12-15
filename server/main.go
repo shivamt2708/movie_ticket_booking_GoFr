@@ -99,15 +99,14 @@ func main() {
 		return data, err
 	})
 
-	app.POST("/admin/book-ticket/{email}/{user_email}/{hall_name}", func(ctx *gofr.Context) (interface{}, error) {
-		email := ctx.PathParam("email")
+	app.POST("/admin/book-ticket/{show_id}/{user_email}", func(ctx *gofr.Context) (interface{}, error) {
+		show_id := ctx.PathParam("show_id")
 		user_email := ctx.PathParam("user_email")
-		hall_name := ctx.PathParam("hall_name")
 
 		// Inserting a customer row in the database using SQL
 		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
-			"INSERT INTO bookings (email, user_email, hall_name) VALUES (?, ?, ?)",
-			email, user_email, hall_name)
+			"INSERT INTO bookings (show_id, user_email) VALUES (?, ?)",
+			show_id, user_email)
 
 		return data, err
 	})
@@ -154,6 +153,130 @@ func main() {
 		for rows.Next() {
 			var customer Hall
 			if err := rows.Scan(&customer.Email, &customer.Total_seats, &customer.Price, &customer.Name); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
+	app.GET("/my-shows/{email}/{movie_name}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		movie_name := ctx.PathParam("movie_name")
+		var customers []Show
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where email = ? AND movie_name = ?",email, movie_name)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Show
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
+	app.GET("/my-shows3/{email}/{movie_name}/{date}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		movie_name := ctx.PathParam("movie_name")
+		date := ctx.PathParam("date")
+
+		var customers []Show
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where email = ? AND movie_name = ? AND date = ?",email, movie_name, date)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Show
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
+	app.GET("/my-shows4/{email}/{movie_name}/{date}/{time}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		movie_name := ctx.PathParam("movie_name")
+		date := ctx.PathParam("date")
+		time := ctx.PathParam("time")
+
+		var customers []Show
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where email = ? AND movie_name = ? AND date = ? AND time = ?",email, movie_name, date, time)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Show
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
+	app.GET("/my-shows2/{email}/{movie_name}/{hall_name}/{date}/{time}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		movie_name := ctx.PathParam("movie_name")
+		hall_name := ctx.PathParam("hall_name")
+		date := ctx.PathParam("date")
+		time := ctx.PathParam("time")
+		var customers []Show
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where email = ? AND movie_name = ? AND hall_name = ? AND date = ? AND time = ?",email, movie_name, hall_name, date, time)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Show
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
 				return nil, err
 			}
 

@@ -13,11 +13,13 @@ const CreateShipment = () => {
     hall_name: "",
     date: "",
     time: "",
+    user_email: "",
   });
-  const { movie_name, hall_name, date, time } = inputValue;
+  const { movie_name, hall_name, date, time, user_email } = inputValue;
   const location = useLocation();
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
+  const [show_id, setshow_id] = useState([]);
   const [shipments, setShipments] = useState([]);
   const [halls, setHalls] = useState([]);
 
@@ -39,26 +41,95 @@ const CreateShipment = () => {
         } 
     };
     fetchData();
-
-    const fetchData1 = async () => {
-        try {
-            const response = await axios.get(
-              `http://localhost:8000/my-halls/${username}`);
-            const shipments1 = response.data.data;
-            setHalls(shipments1);
-            console.log(shipments1);
-        } catch (error) {
-            console.error(error);
-            toast.error("Error fetching HALLS", { position: "bottom-left" });
-        } 
-    };
-    fetchData1();
   }, [location.search, username]);
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setInputValue({
       ...inputValue,
       [name]: value,
+    });
+  };
+
+  const handleMovieChange = async (e) => {
+    const selectedMovie = e.target.value;
+  
+    // Fetch data based on the selected movie
+    try {
+      const response = await axios.get(`http://localhost:8000/my-shows/${username}/${selectedMovie}`);
+      const shipments1 = response.data.data;
+      setHalls(shipments1);
+      console.log(shipments1);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error fetching HALLS", { position: "bottom-left" });
+    }
+  
+    // Update the state based on the selected movie
+    setInputValue({
+      ...inputValue,
+      movie_name: selectedMovie,
+    });
+  };
+
+  const handleDateChange = async (e) => {
+    const selectedMovie = e.target.value;
+  
+    // Fetch data based on the selected movie
+    try {
+      const response = await axios.get(`http://localhost:8000/my-shows3/${username}/${inputValue.movie_name}/${selectedMovie}`);
+      const shipments1 = response.data.data;
+      console.log(shipments1);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error fetching Date", { position: "bottom-left" });
+    }
+  
+    // Update the state based on the selected movie
+    setInputValue({
+      ...inputValue,
+      date: selectedMovie,
+    });
+  };
+
+  const handleTimeChange = async (e) => {
+    const selectedMovie = e.target.value;
+  
+    // Fetch data based on the selected movie
+    try {
+      const response = await axios.get(`http://localhost:8000/my-shows4/${username}/${inputValue.movie_name}/${inputValue.date}/${selectedMovie}`);
+      const shipments1 = response.data.data;
+      console.log(shipments1);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error fetching Time", { position: "bottom-left" });
+    }
+  
+    // Update the state based on the selected movie
+    setInputValue({
+      ...inputValue,
+      time: selectedMovie,
+    });
+  };
+
+  const handleHallChange = async (e) => {
+    const selectedMovie = e.target.value;
+  
+    // Fetch data based on the selected movie
+    try {
+      const response = await axios.get(`http://localhost:8000/my-shows2/${username}/${inputValue.movie_name}/${selectedMovie}/${inputValue.date}/${inputValue.time}`);
+      const shipments1 = response.data.data;
+
+      setshow_id(shipments1);
+      console.log(shipments1);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error fetching Shows", { position: "bottom-left" });
+    }
+  
+    // Update the state based on the selected movie
+    setInputValue({
+      ...inputValue,
+      hall_name: selectedMovie,
     });
   };
 
@@ -75,7 +146,7 @@ const CreateShipment = () => {
     e.preventDefault();
     try {
       const data1 = await axios.post(
-        `http://localhost:8000/add-show/${username}/${inputValue.movie_name}/${inputValue.hall_name}/${inputValue.date}/${inputValue.time}`,
+        `http://localhost:8000/admin/book-ticket/${show_id[0].id}/${inputValue.user_email}`,
         { withCredentials: true }
       );
       const {data} = data1
@@ -99,19 +170,20 @@ const CreateShipment = () => {
     hall_name: "",
     date: "",
     time: "",
+    user_email: "",
     });
   };
 
   return (
     <div className="form_container">
-      <h2>Add Show</h2>
+      <h2>Book Ticket</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="movie_name">movie name</label>
           <select
             name="movie_name"
             value={movie_name}
-            onChange={handleOnChange}
+            onChange={handleMovieChange}
           >
             <option></option>
             {shipments.map((shipment) => (
@@ -123,40 +195,62 @@ const CreateShipment = () => {
             </select>
         </div>
         <div>
-          <label htmlFor="hall_name">hall name</label>
+          <label htmlFor="date">date</label>
           <select
-            name="hall_name"
-            value={hall_name}
-            onChange={handleOnChange}
+            name="date"
+            value={date}
+            onChange={handleDateChange}
           >
             <option></option>
             {halls.map((shipment) => (
-            <option key={shipment.id} value={shipment.name}>
-                {shipment.name}
+            <option key={shipment.id} value={shipment.date}>
+                {shipment.date}
             </option>
             ))}
           
             </select>
         </div>
         <div>
-          <label htmlFor="date">date</label>
-          <input
-                type="date"
-                name="date"
-                value={inputValue.date}
-                onChange={handleOnChange}
-                placeholder="Enter date"
-            />
-        </div>
-        <div>
           <label htmlFor="time">time</label>
-          <input
-            type="time"
+          <select
             name="time"
             value={time}
-            placeholder="Enter time"
-            onChange={handleOnChange}
-          />
+            onChange={handleTimeChange}
+          >
+            <option></option>
+            {halls.map((shipment) => (
+            <option key={shipment.id} value={shipment.time}>
+                {shipment.time}
+            </option>
+            ))}
+          
+            </select>
+        </div>
+        <div>
+          <label htmlFor="hall_name">hall name</label>
+          <select
+            name="hall_name"
+            value={hall_name}
+            onChange={handleHallChange}
+          >
+            <option></option>
+            {halls.map((shipment) => (
+            <option key={shipment.id} value={shipment.hall_name}>
+                {shipment.hall_name}
+            </option>
+            ))}
+          
+            </select>
+        </div>
+        <div>
+          <label htmlFor="user_email">user email</label>
+          <input
+                type="text"
+                name="user_email"
+                value={inputValue.user_email}
+                onChange={handleOnChange}
+                placeholder="Enter user email"
+            />
         </div>
         <button type="submit">Submit</button>
       </form>
