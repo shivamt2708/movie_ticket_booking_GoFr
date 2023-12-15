@@ -48,6 +48,7 @@ const MyShipments = () => {
               <th>Hall Name</th>
               <th>Date</th>
               <th>Time</th>
+              <th>Seats Left</th>
             </tr>
           </thead>
           <tbody>
@@ -58,6 +59,7 @@ const MyShipments = () => {
                 <td>{shipment.hall_name}</td>
                 <td>{shipment.date}</td>
                 <td>{shipment.time}</td>
+                <td>{shipment.seats_left}</td>
               </tr>
             ))}
           </tbody>

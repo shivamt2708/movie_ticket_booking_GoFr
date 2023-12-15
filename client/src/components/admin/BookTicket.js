@@ -21,7 +21,9 @@ const CreateShipment = () => {
   const [username, setUsername] = useState("");
   const [show_id, setshow_id] = useState([]);
   const [shipments, setShipments] = useState([]);
-  const [halls, setHalls] = useState([]);
+  const [movies, setmovies] = useState([]);
+  const [dates, setdates] = useState([]);
+  const [times, settimes] = useState([]);
 
   useEffect(() => {
     // Parse the query parameters to get the username
@@ -57,7 +59,7 @@ const CreateShipment = () => {
     try {
       const response = await axios.get(`http://localhost:8000/my-shows/${username}/${selectedMovie}`);
       const shipments1 = response.data.data;
-      setHalls(shipments1);
+      setmovies(shipments1);
       console.log(shipments1);
     } catch (error) {
       console.error(error);
@@ -78,6 +80,7 @@ const CreateShipment = () => {
     try {
       const response = await axios.get(`http://localhost:8000/my-shows3/${username}/${inputValue.movie_name}/${selectedMovie}`);
       const shipments1 = response.data.data;
+      setdates(shipments1)
       console.log(shipments1);
     } catch (error) {
       console.error(error);
@@ -98,6 +101,7 @@ const CreateShipment = () => {
     try {
       const response = await axios.get(`http://localhost:8000/my-shows4/${username}/${inputValue.movie_name}/${inputValue.date}/${selectedMovie}`);
       const shipments1 = response.data.data;
+      settimes(shipments1)
       console.log(shipments1);
     } catch (error) {
       console.error(error);
@@ -202,7 +206,7 @@ const CreateShipment = () => {
             onChange={handleDateChange}
           >
             <option></option>
-            {halls.map((shipment) => (
+            {movies.map((shipment) => (
             <option key={shipment.id} value={shipment.date}>
                 {shipment.date}
             </option>
@@ -218,7 +222,7 @@ const CreateShipment = () => {
             onChange={handleTimeChange}
           >
             <option></option>
-            {halls.map((shipment) => (
+            {dates.map((shipment) => (
             <option key={shipment.id} value={shipment.time}>
                 {shipment.time}
             </option>
@@ -234,7 +238,7 @@ const CreateShipment = () => {
             onChange={handleHallChange}
           >
             <option></option>
-            {halls.map((shipment) => (
+            {times.map((shipment) => (
             <option key={shipment.id} value={shipment.hall_name}>
                 {shipment.hall_name}
             </option>

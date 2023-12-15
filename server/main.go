@@ -110,8 +110,7 @@ func main() {
 			show_id, user_email)
 
 		ctx.DB().ExecContext(ctx.Request().Context(),
-			"UPDATE shows SET seats_left = (SELECT total_seats FROM halls WHERE name = (SELECT hall_name FROM shows WHERE id = show_id))-1 WHERE id = show_id",
-			show_id, user_email)
+			"UPDATE shows SET seats_left = (SELECT total_seats FROM halls WHERE name = (SELECT hall_name FROM shows WHERE id = ?))-1 WHERE id = ?",show_id,show_id)
 
 		return data, err
 	})
