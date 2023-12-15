@@ -24,6 +24,7 @@ type Show struct {
 	Email    string `json:"email"`
 	Movie_name string `json:"movie_name"`
 	Hall_name     string `json:"hall_name"`
+	Seats_left int `json:"seats_left"`
 	Date string `json:"date"`
 	Time string `json:"time"`
 }
@@ -82,8 +83,8 @@ func main() {
 
 		// Inserting a customer row in the database using SQL
 		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
-			"INSERT INTO shows (email, movie_name, hall_name, date, time) VALUES (?, ?, ?, ?, ?)",
-			email, movie_name, hall_name, date, time)
+			"INSERT INTO shows (email, movie_name, hall_name, seats_left, date, time) VALUES (?, ?, ?, (SELECT total_seats FROM halls WHERE name = ?), ?, ?)",
+			email, movie_name, hall_name, hall_name, date, time)
 
 		return data, err
 	})
@@ -106,6 +107,10 @@ func main() {
 		// Inserting a customer row in the database using SQL
 		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
 			"INSERT INTO bookings (show_id, user_email) VALUES (?, ?)",
+			show_id, user_email)
+
+		ctx.DB().ExecContext(ctx.Request().Context(),
+			"UPDATE shows SET seats_left = (SELECT total_seats FROM halls WHERE name = (SELECT hall_name FROM shows WHERE id = show_id))-1 WHERE id = show_id",
 			show_id, user_email)
 
 		return data, err
@@ -167,6 +172,34 @@ func main() {
 		return customers, nil
 	})
 
+	app.GET("/my-bookings/{email}", func(ctx *gofr.Context) (interface{}, error) {
+		email := ctx.PathParam("email")
+		var customers []Booking
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM bookings WHERE show_id IN (SELECT id FROM shows WHERE email = ?)",email)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Booking
+			if err := rows.Scan(&customer.Id, &customer.ShowID, &customer.User_email); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
 	app.GET("/my-shows/{email}/{movie_name}", func(ctx *gofr.Context) (interface{}, error) {
 		email := ctx.PathParam("email")
 		movie_name := ctx.PathParam("movie_name")
@@ -181,7 +214,35 @@ func main() {
 
 		for rows.Next() {
 			var customer Show
-			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Seats_left, &customer.Date, &customer.Time); err != nil {
+				return nil, err
+			}
+
+			customers = append(customers, customer)
+		}
+
+		if err := rows.Err(); err != nil {
+			return nil, err
+		}
+
+		// Return the customer data
+		return customers, nil
+	})
+
+	app.GET("/my-shows5/{id}", func(ctx *gofr.Context) (interface{}, error) {
+		id := ctx.PathParam("id")
+		var customers []Show
+
+		// Getting the customer data from the database using SQL
+		rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where id = ?",id)
+		if err != nil {
+			return nil, err
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var customer Show
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Seats_left, &customer.Date, &customer.Time); err != nil {
 				return nil, err
 			}
 
@@ -212,7 +273,7 @@ func main() {
 
 		for rows.Next() {
 			var customer Show
-			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Seats_left, &customer.Date, &customer.Time); err != nil {
 				return nil, err
 			}
 
@@ -244,7 +305,7 @@ func main() {
 
 		for rows.Next() {
 			var customer Show
-			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Seats_left, &customer.Date, &customer.Time); err != nil {
 				return nil, err
 			}
 
@@ -276,7 +337,7 @@ func main() {
 
 		for rows.Next() {
 			var customer Show
-			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Date, &customer.Time); err != nil {
+			if err := rows.Scan(&customer.Id, &customer.Email, &customer.Movie_name, &customer.Hall_name, &customer.Seats_left, &customer.Date, &customer.Time); err != nil {
 				return nil, err
 			}
 
