@@ -19,11 +19,19 @@ type Hall struct {
 	Name     string `json:"name"`
 }
 
-type Booking struct {
+type Show struct {
 	Id int `json:"id"`
 	Email    string `json:"email"`
-	User_email string `json:"user_email"`
+	Movie_name string `json:"movie_name"`
 	Hall_name     string `json:"hall_name"`
+	Date string `json:"date"`
+	Time string `json:"time"`
+}
+
+type Booking struct {
+	Id int `json:"id"`
+	ShowID int `json:"show_id"`
+	User_email string `json:"user_email"`
 }
 
 type Movie struct {
