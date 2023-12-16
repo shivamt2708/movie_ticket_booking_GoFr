@@ -36,7 +36,7 @@ const MyShipments = () => {
 
   return (
     <div>
-      <h1>Your Halls' status</h1>
+      <h1>Your Halls</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (

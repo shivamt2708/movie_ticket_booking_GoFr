@@ -34,7 +34,7 @@ const CreateShipment = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get(
-              `http://localhost:8000/movie`);
+              `http://localhost:8000/${username}/movie`);
             const shipments1 = response.data.data;
             setShipments(shipments1);
             console.log(shipments1);
@@ -149,6 +149,7 @@ const CreateShipment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(show_id[0].seats_left - 1 >= 0){
     try {
       const data1 = await axios.post(
         `http://localhost:8000/admin/book-ticket/${show_id[0].id}/${inputValue.user_email}`,
@@ -184,6 +185,11 @@ const CreateShipment = () => {
       // Handle error for the second request
       console.error("Error in Axios request 2:", error2);
     }
+  }
+    else{
+      window.alert("no seats left in the show")
+    }
+
 
     setInputValue({
       ...inputValue,
