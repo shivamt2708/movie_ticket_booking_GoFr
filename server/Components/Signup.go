@@ -1,4 +1,4 @@
-package Signup
+package Components
 
 import "gofr.dev/pkg/gofr"
 
