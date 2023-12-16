@@ -1,6 +1,7 @@
 package main
 
 import "gofr.dev/pkg/gofr"
+import "movie_ticket_booking_"
 import "fmt"
 
 
@@ -40,25 +41,10 @@ type Movie struct {
 	Movie_name string `json:"movie_name"`
 }
 
-
 func main() {
 	app := gofr.New()
 
-	app.POST("/signup/{email}/{username}/{password}/{role}/{location}", func(ctx *gofr.Context) (interface{}, error) {
-		email := ctx.PathParam("email")
-		username := ctx.PathParam("username")
-		password := ctx.PathParam("password")
-		role := ctx.PathParam("role")
-		location := ctx.PathParam("location")
-
-		// Inserting a customer row in the database using SQL
-		data, err := ctx.DB().ExecContext(ctx.Request().Context(),
-			"INSERT INTO users (email, username, password, role, location) VALUES (?, ?, ?, ?, ?)",
-			email, username, password, role, location)
-
-
-		return data, err
-	})
+	app.POST("/signup/{email}/{username}/{password}/{role}/{location}", Signup)
 
 	app.POST("/add-movie-hall/{email}/{total_seats}/{price}/{name}", func(ctx *gofr.Context) (interface{}, error) {
 		email := ctx.PathParam("email")
