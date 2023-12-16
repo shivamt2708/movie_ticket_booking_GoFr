@@ -35,7 +35,6 @@ const CreateShipment = () => {
             console.log(shipments1);
         } catch (error) {
             console.error(error);
-            toast.error("Error fetching movies", { position: "bottom-left" });
         } 
     };
     fetchData();
@@ -49,7 +48,6 @@ const CreateShipment = () => {
             console.log(shipments1);
         } catch (error) {
             console.error(error);
-            toast.error("Error fetching HALLS", { position: "bottom-left" });
         } 
     };
     fetchData1();
@@ -62,15 +60,6 @@ const CreateShipment = () => {
     });
   };
 
-  const handleError = (err) =>
-    toast.error(err, {
-      position: "bottom-left",
-    });
-  const handleSuccess = (msg) =>
-    toast.success(msg, {
-      position: "bottom-left",
-    });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -80,12 +69,10 @@ const CreateShipment = () => {
       );
       const {data} = data1
       if(data.data != null){
-        handleSuccess("movie show added");
         const usernameQueryParam = `?email=${username}`;
         navigate("/admin-home" + usernameQueryParam);
       }
       else if(data.data === null){
-        handleError("movie show not added");
         const usernameQueryParam = `?email=${username}`;
         navigate("/admin-home" + usernameQueryParam);
       }

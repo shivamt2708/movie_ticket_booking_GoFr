@@ -26,7 +26,6 @@ const MyShipments = () => {
             console.log(shipments1);
         } catch (error) {
             console.error(error);
-            toast.error("Error fetching halls", { position: "bottom-left" });
         } finally {
             setLoading(false);
         }

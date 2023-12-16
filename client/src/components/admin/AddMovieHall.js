@@ -31,15 +31,6 @@ const CreateShipment = () => {
     });
   };
 
-  const handleError = (err) =>
-    toast.error(err, {
-      position: "bottom-left",
-    });
-  const handleSuccess = (msg) =>
-    toast.success(msg, {
-      position: "bottom-left",
-    });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -49,12 +40,10 @@ const CreateShipment = () => {
       );
       const {data} = data1
       if(data.data != null){
-        handleSuccess("movie hall added");
         const usernameQueryParam = `?email=${username}`;
         navigate("/admin-home" + usernameQueryParam);
       }
       else if(data.data === null){
-        handleError("movie hall not added");
         const usernameQueryParam = `?email=${username}`;
         navigate("/admin-home" + usernameQueryParam);
       }
