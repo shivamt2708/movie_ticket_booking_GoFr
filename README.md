@@ -107,7 +107,7 @@ movies table:
 
 Screen Shots:
 
-![Image 0](./images/0)
+![Image 0](./images/0.png)
 ![Image 1](./images/1)
 ![Image 2](./images/2)
 ![Image 3](./images/3)
