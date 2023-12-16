@@ -22,31 +22,15 @@ const SellerHome = () => {
     navigate("/signup");
   };
 
-  const Ship = () => {
-    // ... (implement the Ship functionality if needed)
-    const usernameQueryParam = `?email=${username}`;
-    navigate("/add-movie-hall" + usernameQueryParam);
-  };
-
-  const Ship2 = () => {
-    // ... (implement the Ship functionality if needed)
-    const usernameQueryParam = `?email=${username}`;
-    navigate("/my-halls" + usernameQueryParam);
-  };
   const Ship3 = () => {
     // ... (implement the Ship functionality if needed)
     const usernameQueryParam = `?email=${username}`;
-    navigate("/admin/book-ticket" + usernameQueryParam);
-  };
-  const Ship4 = () => {
-    // ... (implement the Ship functionality if needed)
-    const usernameQueryParam = `?email=${username}`;
-    navigate("/add-show" + usernameQueryParam);
+    navigate("/user/book-ticket" + usernameQueryParam);
   };
   const Ship5 = () => {
     // ... (implement the Ship functionality if needed)
     const usernameQueryParam = `?email=${username}`;
-    navigate("/my-bookings" + usernameQueryParam);
+    navigate("/my-bookings2" + usernameQueryParam);
   };
 
   return (
@@ -57,10 +41,7 @@ const SellerHome = () => {
           Welcome <span>{username}</span>
         </h4>
         <button onClick={Logout}>Logout</button>
-        <button onClick={Ship}>Add Movie Hall</button>
-        <button onClick={Ship2}>My Halls</button>
         <button onClick={Ship3}>Book Ticket</button>
-        <button onClick={Ship4}>Add Show</button>
         <button onClick={Ship5}>My Bookings</button>
       </div>
       <ToastContainer />

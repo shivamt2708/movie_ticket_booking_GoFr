@@ -20,7 +20,7 @@ const MyShipments = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get(
-              `http://localhost:8000/my-bookings/${username}`);
+              `http://localhost:8000/my-bookings2/${username}`);
             const shipments1 = response.data.data;
             setShipments(shipments1);
             console.log(shipments1);
@@ -51,10 +51,7 @@ const MyShipments = () => {
             {shipments.map((shipment) => (
               <tr>
                 <td>{shipment.id}</td>
-                <td>
-                    <span>
-                        <Link to={"/my-shows" + `?id=${shipment.show_id}`}>{shipment.show_id}</Link>
-                    </span>
+                <td>{shipment.show_id}
                 </td>
                 <td>{shipment.user_email}</td>
               </tr>

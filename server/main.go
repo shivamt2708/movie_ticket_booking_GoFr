@@ -19,6 +19,8 @@ import (
 	Components14 "server/Components/Components14"
 	Components15 "server/Components/Components15"
 	Components16 "server/Components/Components16"
+	Components17 "server/Components/Components17"
+	Components18 "server/Components/Components18"
 )
 
 func main() {
@@ -57,6 +59,10 @@ func main() {
 	app.GET("/{email}/movie", Components15.Movie2)
 
 	app.POST("/login/{email}/{password}", Components16.Login)
+
+	app.GET("/location/{location1}", Components17.GetLocation)
+
+	app.GET("/my-bookings2/{email}", Components18.MyBookings2)
 
 
 
