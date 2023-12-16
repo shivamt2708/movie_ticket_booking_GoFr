@@ -1,23 +1,23 @@
-package Components
+package Components6
 
 import (
 	"gofr.dev/pkg/gofr"
 	models "server/models"
 )
 
-func Movie(ctx *gofr.Context) (interface{}, error) {
-	var customers []models.Movie
+func Customer(ctx *gofr.Context) (interface{}, error) {
+	var customers []models.Customer
 
 	// Getting the customer data from the database using SQL
-	rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM movies")
+	rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM users where role = 'user'")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var customer models.Movie
-		if err := rows.Scan(&customer.Id, &customer.Movie_name); err != nil {
+		var customer models.Customer
+		if err := rows.Scan(&customer.Email, &customer.Username, &customer.Password, &customer.Role, &customer.Location); err != nil {
 			return nil, err
 		}
 

@@ -1,16 +1,20 @@
-package Components
+package Components12
 
 import (
 	"gofr.dev/pkg/gofr"
 	models "server/models"
 )
 
-func MyShows5(ctx *gofr.Context) (interface{}, error) {
-	id := ctx.PathParam("id")
+func MyShows4(ctx *gofr.Context) (interface{}, error) {
+	email := ctx.PathParam("email")
+	movie_name := ctx.PathParam("movie_name")
+	date := ctx.PathParam("date")
+	time := ctx.PathParam("time")
+
 	var customers []models.Show
 
 	// Getting the customer data from the database using SQL
-	rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where id = ?",id)
+	rows, err := ctx.DB().QueryContext(ctx.Request().Context(), "SELECT * FROM shows where email = ? AND movie_name = ? AND date = ? AND time = ?",email, movie_name, date, time)
 	if err != nil {
 		return nil, err
 	}
