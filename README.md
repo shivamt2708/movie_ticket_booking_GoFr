@@ -107,11 +107,11 @@ movies table:
 
 Screen Shots:
 
-<img scr="./images/0">
-<img scr="./images/1">
-<img scr="./images/2">
-<img scr="./images/3">
-<img scr="./images/4">
-<img scr="./images/5">
-<img scr="./images/6">
-<img scr="./images/7">
+![Image 0](./images/0)
+![Image 1](./images/1)
+![Image 2](./images/2)
+![Image 3](./images/3)
+![Image 4](./images/4)
+![Image 5](./images/5)
+![Image 6](./images/6)
+![Image 7](./images/7)
