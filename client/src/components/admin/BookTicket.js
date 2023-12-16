@@ -20,6 +20,7 @@ const CreateShipment = () => {
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
   const [show_id, setshow_id] = useState([]);
+  const [seats_left, setseats_left] = useState([]);
   const [shipments, setShipments] = useState([]);
   const [movies, setmovies] = useState([]);
   const [dates, setdates] = useState([]);
@@ -124,12 +125,12 @@ const CreateShipment = () => {
       const shipments1 = response.data.data;
 
       setshow_id(shipments1);
+
       console.log(shipments1);
-    } catch (error) {
-      console.error(error);
-      toast.error("Error fetching Shows", { position: "bottom-left" });
-    }
-  
+    }  catch (error1) {
+      // Handle error for the first request
+      console.error("Error in Axios request 1:", error1);
+    } 
     // Update the state based on the selected movie
     setInputValue({
       ...inputValue,
@@ -153,6 +154,7 @@ const CreateShipment = () => {
         `http://localhost:8000/admin/book-ticket/${show_id[0].id}/${inputValue.user_email}`,
         { withCredentials: true }
       );
+      console.log(data1)
       const {data} = data1
       if(data.data != null){
         handleSuccess("movie show added");
@@ -168,6 +170,21 @@ const CreateShipment = () => {
     } catch (error) {
       console.log(error);
     }
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/admin/book-ticket2/${show_id[0].id}/${show_id[0].seats_left - 1}`);
+
+      const shipments1 = response.data.data;
+      setseats_left(shipments1);
+      console.log(response)
+    }
+    
+    catch (error2) {
+      // Handle error for the second request
+      console.error("Error in Axios request 2:", error2);
+    }
+
     setInputValue({
       ...inputValue,
     movie_name: "",
